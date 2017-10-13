@@ -5,28 +5,29 @@ The goal of this task is extracting brands from ecommerce sites' titles (such as
 
 ![bez tytulu2](https://user-images.githubusercontent.com/32640820/31491341-4e6f855a-af47-11e7-8935-1a11ca318e6c.png)
 
-Data has been cleaned previously. Firstly the observations with more than 4 words were removed because the majority of them was labeled incorrectly. Brands were also cleaned from punctuations and part of incorrectly labeled brands was also removed manually. After problems with low recall also all of the observations with column present = False, where dropped. Every title was split into tokens, POS-tagged and labeled binary ‘0’ or ‘BRAND’. Data after cleaning was reduced to about 160k observations.
+Data has been cleaned previously. Firstly the observations with more than 4 words in the brand attribute were removed because the majority of them were labeled incorrectly. Brands were also cleaned from punctuations and part of incorrectly labeled brands was also removed manually. After problems with low recall also all of the observations with column present = False, where dropped. Every title was split into tokens and labeled binary ‘0’ or ‘BRAND’. Data after cleaning was reduced to about 160k observations.
 
 Training and testing were being run on two differently split sets of data. First pair of datasets was created by just random sampling (ratio 0.9 to 0.1) and the other split was created in such a way that the test set included titles which brands were only occurring once in the whole dataset, so the system hadn’t encountered them during training process. The second split was like a bigger challenge for the model, because from my experience sometimes models were simply trying to remember exact words considered as brands rather than finding a sequence in the title. So what I intended to do using second split was to avoid overfitting to known brands. As it could be seen in the results there is a major drop in performance for second split for all the models.
 
 In order to find the best machine learning approach for this kind of task 3 models have been created. Let’s analyze how they are created and what input they require.
 
 ## Conditional Random Field model
-First used model was based on Conditional Random Field. What I am trying to do using this model is splitting the title into single tokens and creating for every of them set of numerical features which are significant in brand recognizing. Features used in CRF model which had an impact on improving the model:
-•	Token
-•	Token position in the sentence
-•	Last two characters of the token
-•	Is every character upper
-•	Is only first character upper
-•	Is the token a digit
-•	Previous/next token
-•	Is previous/next token upper
-•	Is previous/next token a title
-•	Does a next token contains a digit
-•	Is next token a punctuation
-•	Is a token at the beginning/end of the sentence
-•	Previous/next bigrams
-•	Root category for titles (every category is using different vocabulary and have different title structure, f.e. Apple in electronics is not the same as in grocery)
+First used model was based on Conditional Random Field. What I am trying to do using this model is splitting the title into single tokens and creating for every of them set of numerical features which are significant in brand recognizing. 
+Features used in CRF model which had an impact on improving the model:
+-	Token
+-	Token position in the sentence
+-	Last two characters of the token
+-	Is every character upper
+-	Is only first character upper
+-	Is the token a digit
+-	Previous/next token
+-	Is previous/next token upper
+-	Is previous/next token a title
+-	Does a next token contains a digit
+-	Is next token a punctuation
+-	Is a token at the beginning/end of the sentence
+-	Previous/next bigrams
+-	Root category for titles (every category is using different vocabulary and have different title structure, f.e. Apple in electronics is not the same as in grocery)
 
 Example of features for one of the words:
 
